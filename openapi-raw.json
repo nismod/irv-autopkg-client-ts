@@ -1,0 +1,899 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "servers": [
+        {
+            "url": "/extract"
+        }
+    ],
+    "paths": {
+        "/v1/liveness": {
+            "get": {
+                "tags": [
+                    "probes",
+                    "probes"
+                ],
+                "summary": "Get Liveness",
+                "description": "API Liveness Route",
+                "operationId": "get_liveness_v1_liveness_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/v1/readiness": {
+            "get": {
+                "tags": [
+                    "probes",
+                    "probes"
+                ],
+                "summary": "Get Readiness",
+                "description": "API Readiness Route, inc. DB check",
+                "operationId": "get_readiness_v1_readiness_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/v1/jobs/{job_id}": {
+            "get": {
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "Get Status",
+                "description": "Get status of a DAG associated with a given package",
+                "operationId": "get_status_v1_jobs__job_id__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Job Id",
+                            "type": "string"
+                        },
+                        "name": "job_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JobGroupStatus"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/jobs": {
+            "post": {
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "Submit Processing Job",
+                "description": "Submit a job for a given package to run a list of dataset-processors",
+                "operationId": "submit_processing_job_v1_jobs_post",
+                "parameters": [
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Status Code",
+                            "default": 202
+                        },
+                        "name": "status_code",
+                        "in": "query"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Job"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SubmittedJob"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/packages": {
+            "get": {
+                "tags": [
+                    "packages"
+                ],
+                "summary": "Get Packages",
+                "description": "Retrieve information on available top-level packages (which are created from boundaries)",
+                "operationId": "get_packages_v1_packages_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Packages V1 Packages Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PackageSummary"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/v1/packages/{boundary_name}": {
+            "get": {
+                "tags": [
+                    "packages"
+                ],
+                "summary": "Get Package",
+                "description": "Retrieve information about a specific package (which has been created from a given boundary)",
+                "operationId": "get_package_v1_packages__boundary_name__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Boundary Name",
+                            "type": "string"
+                        },
+                        "name": "boundary_name",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Package"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/boundaries": {
+            "get": {
+                "tags": [
+                    "boundaries"
+                ],
+                "summary": "Get All Boundary Summaries",
+                "description": "Retrieve summary information on available boundaries",
+                "operationId": "get_all_boundary_summaries_v1_boundaries_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get All Boundary Summaries V1 Boundaries Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/BoundarySummary"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/v1/boundaries/search": {
+            "get": {
+                "tags": [
+                    "boundaries"
+                ],
+                "summary": "Search Boundary",
+                "description": "Search for boundaries by name or coordinates.",
+                "operationId": "search_boundary_v1_boundaries_search_get",
+                "parameters": [
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Name",
+                            "type": "string"
+                        },
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Latitude",
+                            "type": "number"
+                        },
+                        "name": "latitude",
+                        "in": "query"
+                    },
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Longitude",
+                            "type": "number"
+                        },
+                        "name": "longitude",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Search Boundary V1 Boundaries Search Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/BoundarySummary"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/boundaries/{name}": {
+            "get": {
+                "tags": [
+                    "boundaries"
+                ],
+                "summary": "Get Boundary By Name",
+                "description": "Retrieved detailed information on a specific boundary",
+                "operationId": "get_boundary_by_name_v1_boundaries__name__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Name",
+                            "type": "string"
+                        },
+                        "name": "name",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Boundary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/processors": {
+            "get": {
+                "tags": [
+                    "processors"
+                ],
+                "summary": "Get Processors",
+                "description": "Metadata for all available data processors",
+                "operationId": "get_processors_v1_processors_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Processors V1 Processors Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Processor"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/v1/processors/{name}": {
+            "get": {
+                "tags": [
+                    "processors"
+                ],
+                "summary": "Get Processor",
+                "description": "Metadata for all versions of a single processor",
+                "operationId": "get_processor_v1_processors__name__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Name",
+                            "type": "string"
+                        },
+                        "name": "name",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Processor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/processors/{name}/{version}": {
+            "get": {
+                "tags": [
+                    "processors"
+                ],
+                "summary": "Get Processor Version",
+                "description": "Metadata for a single version of a processor",
+                "operationId": "get_processor_version_v1_processors__name___version__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Name",
+                            "type": "string"
+                        },
+                        "name": "name",
+                        "in": "path"
+                    },
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Version",
+                            "type": "string"
+                        },
+                        "name": "version",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProcessorVersionMetadata"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Boundary": {
+                "title": "Boundary",
+                "required": [
+                    "name",
+                    "name_long",
+                    "admin_level",
+                    "geometry",
+                    "envelope"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "name_long": {
+                        "title": "Name Long",
+                        "type": "string"
+                    },
+                    "admin_level": {
+                        "title": "Admin Level",
+                        "type": "string"
+                    },
+                    "geometry": {
+                        "$ref": "#/components/schemas/GeoJSON"
+                    },
+                    "envelope": {
+                        "$ref": "#/components/schemas/GeoJSON"
+                    }
+                },
+                "description": "Complete boundary information"
+            },
+            "BoundarySummary": {
+                "title": "BoundarySummary",
+                "required": [
+                    "name",
+                    "name_long"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "name_long": {
+                        "title": "Name Long",
+                        "type": "string"
+                    }
+                },
+                "description": "Summary of a boundary"
+            },
+            "DataPackage": {
+                "$ref": "https://specs.frictionlessdata.io/schemas/data-package.json"
+            },
+            "GeoJSON": {
+                "$ref": "https://geojson.org/schema/GeoJSON.json"
+            },
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "Job": {
+                "title": "Job",
+                "required": [
+                    "boundary_name",
+                    "processors"
+                ],
+                "type": "object",
+                "properties": {
+                    "boundary_name": {
+                        "title": "Boundary Name",
+                        "type": "string"
+                    },
+                    "processors": {
+                        "title": "Processors",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "JobGroupStatus": {
+                "title": "JobGroupStatus",
+                "required": [
+                    "job_group_status",
+                    "job_group_processors"
+                ],
+                "type": "object",
+                "properties": {
+                    "job_group_status": {
+                        "title": "Job Group Status",
+                        "type": "string"
+                    },
+                    "job_group_percent_complete": {
+                        "title": "Job Group Percent Complete",
+                        "type": "integer",
+                        "default": 0
+                    },
+                    "job_group_processors": {
+                        "title": "Job Group Processors",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/JobStatus"
+                        }
+                    }
+                },
+                "description": "Status of the Processor Group in a submited DAG"
+            },
+            "JobProgress": {
+                "title": "JobProgress",
+                "type": "object",
+                "properties": {
+                    "percent_complete": {
+                        "title": "Percent Complete",
+                        "type": "integer",
+                        "default": 0
+                    },
+                    "current_task": {
+                        "title": "Current Task",
+                        "type": "string"
+                    }
+                },
+                "description": "Specifics about the progress of an individual Processors Job"
+            },
+            "JobStatus": {
+                "title": "JobStatus",
+                "required": [
+                    "job_id",
+                    "processor_name",
+                    "job_status"
+                ],
+                "type": "object",
+                "properties": {
+                    "job_id": {
+                        "title": "Job Id",
+                        "type": "string"
+                    },
+                    "processor_name": {
+                        "title": "Processor Name",
+                        "type": "string"
+                    },
+                    "job_status": {
+                        "title": "Job Status",
+                        "type": "string"
+                    },
+                    "job_progress": {
+                        "$ref": "#/components/schemas/JobProgress"
+                    },
+                    "job_result": {
+                        "title": "Job Result",
+                        "type": "object"
+                    }
+                },
+                "description": "Status of a Submitted Job"
+            },
+            "Package": {
+                "title": "Package",
+                "required": [
+                    "boundary_name",
+                    "uri",
+                    "boundary",
+                    "processors",
+                    "datapackage"
+                ],
+                "type": "object",
+                "properties": {
+                    "boundary_name": {
+                        "title": "Boundary Name",
+                        "type": "string"
+                    },
+                    "uri": {
+                        "title": "Uri",
+                        "type": "string"
+                    },
+                    "boundary": {
+                        "$ref": "#/components/schemas/Boundary"
+                    },
+                    "processors": {
+                        "title": "Processors",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Processor"
+                        }
+                    },
+                    "datapackage": {
+                        "$ref": "#/components/schemas/DataPackage"
+                    }
+                },
+                "description": "Detailed information about a package"
+            },
+            "PackageSummary": {
+                "title": "PackageSummary",
+                "required": [
+                    "boundary_name",
+                    "uri"
+                ],
+                "type": "object",
+                "properties": {
+                    "boundary_name": {
+                        "title": "Boundary Name",
+                        "type": "string"
+                    },
+                    "uri": {
+                        "title": "Uri",
+                        "type": "string"
+                    }
+                },
+                "description": "Summary information about a top-level package (which is formed from a boundary)"
+            },
+            "Processor": {
+                "title": "Processor",
+                "required": [
+                    "name",
+                    "versions"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "versions": {
+                        "title": "Versions",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProcessorVersionMetadata"
+                        }
+                    }
+                },
+                "description": "Summary information about a Processor"
+            },
+            "ProcessorVersionMetadata": {
+                "title": "ProcessorVersionMetadata",
+                "required": [
+                    "name",
+                    "description",
+                    "version",
+                    "data_author",
+                    "data_title",
+                    "data_title_long",
+                    "data_summary",
+                    "data_citation",
+                    "data_license",
+                    "data_origin_url",
+                    "data_formats"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "version": {
+                        "title": "Version",
+                        "type": "string"
+                    },
+                    "status": {
+                        "title": "Status",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "uri": {
+                        "title": "Uri",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "data_author": {
+                        "title": "Data Author",
+                        "type": "string"
+                    },
+                    "data_title": {
+                        "title": "Data Title",
+                        "type": "string"
+                    },
+                    "data_title_long": {
+                        "title": "Data Title Long",
+                        "type": "string"
+                    },
+                    "data_summary": {
+                        "title": "Data Summary",
+                        "type": "string"
+                    },
+                    "data_citation": {
+                        "title": "Data Citation",
+                        "type": "string"
+                    },
+                    "data_license": {
+                        "title": "Data License",
+                        "type": "object"
+                    },
+                    "data_origin_url": {
+                        "title": "Data Origin Url",
+                        "type": "string"
+                    },
+                    "data_formats": {
+                        "title": "Data Formats",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "description": "Detail about a Data Processor"
+            },
+            "SubmittedJob": {
+                "title": "SubmittedJob",
+                "required": [
+                    "job_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "job_id": {
+                        "title": "Job Id",
+                        "type": "string"
+                    }
+                },
+                "description": "A successfully submitted Job"
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "boundaries",
+            "description": "Detail about boundaries available for generating packages against"
+        },
+        {
+            "name": "packages",
+            "description": "Detail about existing packages"
+        },
+        {
+            "name": "jobs",
+            "description": "Details and management of processing jobs for packages"
+        },
+        {
+            "name": "processors",
+            "description": "Details about processors and associated datasets"
+        }
+    ]
+}
