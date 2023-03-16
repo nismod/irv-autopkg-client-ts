@@ -1,5 +1,9 @@
 {
   "name": "@nismod/irv-autopkg-client",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nismod/irv-autopkg-client-ts.git"
+  },
   "version": "0.2.7",
   "description": "API Client for irv-autopkg",
   "main": "dist/index.js",
