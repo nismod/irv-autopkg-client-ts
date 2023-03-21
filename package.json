@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/nismod/irv-autopkg-client-ts.git"
   },
-  "version": "0.2.7",
+  "version": "0.2.7-dev",
   "description": "API Client for irv-autopkg",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
