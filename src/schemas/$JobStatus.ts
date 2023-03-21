@@ -9,11 +9,11 @@ export const $JobStatus = {
             isRequired: true,
         },
         processor_name: {
-            type: 'string',
+            type: 'ProcessorsEnum',
             isRequired: true,
         },
         job_status: {
-            type: 'string',
+            type: 'JobStateEnum',
             isRequired: true,
         },
         job_progress: {

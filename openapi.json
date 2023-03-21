@@ -565,12 +565,6 @@
             "DataPackage": {
                 "$ref": "https://specs.frictionlessdata.io/schemas/data-package.json"
             },
-            "Polygon": {
-                "$ref": "https://geojson.org/schema/Polygon.json"
-            },
-            "MultiPolygon": {
-                "$ref": "https://geojson.org/schema/MultiPolygon.json"
-            },
             "HTTPValidationError": {
                 "title": "HTTPValidationError",
                 "type": "object",
@@ -648,6 +642,20 @@
                 },
                 "description": "Specifics about the progress of an individual Processors Job"
             },
+            "JobStateEnum": {
+                "title": "JobStateEnum",
+                "enum": [
+                    "PENDING",
+                    "SUCCESS",
+                    "FAILURE",
+                    "EXECUTING",
+                    "RETRY",
+                    "SKIPPED",
+                    "REVOKED"
+                ],
+                "type": "string",
+                "description": "Possible Job States"
+            },
             "JobStatus": {
                 "title": "JobStatus",
                 "required": [
@@ -662,12 +670,10 @@
                         "type": "string"
                     },
                     "processor_name": {
-                        "title": "Processor Name",
-                        "type": "string"
+                        "$ref": "#/components/schemas/ProcessorsEnum"
                     },
                     "job_status": {
-                        "title": "Job Status",
-                        "type": "string"
+                        "$ref": "#/components/schemas/JobStateEnum"
                     },
                     "job_progress": {
                         "$ref": "#/components/schemas/JobProgress"
@@ -678,6 +684,9 @@
                     }
                 },
                 "description": "Status of a Submitted Job"
+            },
+            "MultiPolygon": {
+                "$ref": "https://geojson.org/schema/MultiPolygon.json"
             },
             "Package": {
                 "title": "Package",
@@ -732,6 +741,9 @@
                     }
                 },
                 "description": "Summary information about a top-level package (which is formed from a boundary)"
+            },
+            "Polygon": {
+                "$ref": "https://geojson.org/schema/Polygon.json"
             },
             "Processor": {
                 "title": "Processor",
@@ -831,6 +843,25 @@
                     }
                 },
                 "description": "Detail about a Data Processor"
+            },
+            "ProcessorsEnum": {
+                "title": "ProcessorsEnum",
+                "enum": [
+                    "gri_osm.roads_and_rail_version_1",
+                    "gridfinder.version_1",
+                    "isimp_drought.version_1",
+                    "jrc_ghsl_built_c.r2022_epoch2018_10m_mszfun",
+                    "jrc_ghsl_population.r2022_epoch2020_1km",
+                    "natural_earth_raster.version_1",
+                    "natural_earth_vector.version_1",
+                    "storm.global_mosaics_version_1",
+                    "test_fail_processor.version_1",
+                    "test_processor.version_1",
+                    "wri_aqueduct.version_2",
+                    "wri_powerplants.version_130",
+                    "processor details not available"
+                ],
+                "description": "An enumeration."
             },
             "SubmittedJob": {
                 "title": "SubmittedJob",
